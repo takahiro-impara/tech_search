@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"sort"
 	"time"
 
@@ -31,10 +32,6 @@ func (b Blogs) Less(i, j int) bool {
 	return b[i].Date < b[j].Date
 }
 
-const PORT = "8080"
-const SEARCH_ENDPOINT_V1 = "/techsearch/v1/blogs"
-const REDIS_ENDPOINT = "localhost:6379"
-
 func getblogs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -44,6 +41,8 @@ func getblogs(w http.ResponseWriter, r *http.Request) {
 }
 
 func getBlogsFromRedis() string {
+	REDIS_ENDPOINT := os.Getenv("REDIS_ENDPOINT")
+
 	pool := newPool(REDIS_ENDPOINT)
 	conn := pool.Get()
 	defer conn.Close()
@@ -104,6 +103,9 @@ func newPool(addr string) *redis.Pool {
 }
 
 func main() {
+	PORT := os.Getenv("PORT")
+	SEARCH_ENDPOINT_V1 := os.Getenv("SEARCH_ENDPOINT_V1")
+
 	http.HandleFunc(SEARCH_ENDPOINT_V1, getblogs)
 	http.ListenAndServe(":"+PORT, nil)
 }

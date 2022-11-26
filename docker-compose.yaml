@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  batch:
+    container_name: tech-search-batch
+    build:
+      context: ./batch
+      dockerfile: Dockerfile
+    env_file:
+      - ./batch/os.env
+    extra_hosts:
+      - "redis.sandbox.us-east-2.tech-search:192.168.11.7"
+    tty: true
+  backend:
+    container_name: backend.sandbox.us-east-2.tech-search
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/os.env
+    extra_hosts:
+      - "redis.sandbox.us-east-2.tech-search:192.168.11.7"
+    tty: true
+    ports:
+      - "8080:8080"
+  frontend:
+    depends_on: 
+      - backend
+    container_name: tech-search-frontend
+    build:
+      context: ./tech-search
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - "3000:3000"

@@ -1,0 +1,1 @@
+terraform apply -var-file=config/us-east-2.tf 

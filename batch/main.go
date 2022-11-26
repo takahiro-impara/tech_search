@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -17,14 +19,10 @@ type articleInfo struct {
 
 type articles []*articleInfo
 
-const MERCARI_ENDPOINT = "https://engineering.mercari.com/blog/"
-const MERCARI_BASEURL = "https://engineering.mercari.com"
-const CLASSMETHOD_ENDPOINT = "https://dev.classmethod.jp"
-
-const REDIS_TTL = 1209600 // second, 2week
-const REDIS_ENDPOINT = "localhost:6379"
-
 func scrapeMercari(campany string) []articleInfo {
+	MERCARI_ENDPOINT := os.Getenv("MERCARI_ENDPOINT")
+	MERCARI_BASEURL := os.Getenv("MERCARI_BASEURL")
+
 	articles := make([]articleInfo, 0)
 	c := colly.NewCollector()
 	c.OnHTML(".post-list__item", func(e *colly.HTMLElement) {
@@ -45,6 +43,8 @@ func scrapeMercari(campany string) []articleInfo {
 }
 
 func scrapeClassmethod(campany string) []articleInfo {
+	CLASSMETHOD_ENDPOINT := os.Getenv("CLASSMETHOD_ENDPOINT")
+
 	articles := make([]articleInfo, 0)
 	c := colly.NewCollector()
 	c.OnHTML(".post-container", func(e *colly.HTMLElement) {
@@ -65,6 +65,9 @@ func scrapeClassmethod(campany string) []articleInfo {
 }
 
 func writeToRedis(articles []articleInfo) {
+	REDIS_TTL, _ := strconv.Atoi(os.Getenv("REDIS_TTL"))
+	REDIS_ENDPOINT := os.Getenv("REDIS_ENDPOINT")
+
 	pool := newPool(REDIS_ENDPOINT)
 	conn := pool.Get()
 	defer conn.Close()

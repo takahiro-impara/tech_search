@@ -1,5 +1,5 @@
 const Card = ({Title, Date, Url, Company}) => {
-  const company_bucket = "http://tech-search.s3.ap-northeast-1.amazonaws.com/" + Company + ".png"
+  const company_bucket = "https://tech-search.s3.ap-northeast-1.amazonaws.com/" + Company + ".png"
   return (
     <div className="card-item">
       <div className="card-img">
