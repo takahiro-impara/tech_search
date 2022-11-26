@@ -50,8 +50,8 @@ func scrapeClassmethod(campany string) []articleInfo {
 	c.OnHTML(".post-container", func(e *colly.HTMLElement) {
 		article := articleInfo{}
 		d := e.DOM.Find("div > p").Text()
-		article.Date = strings.TrimSpace(d)
-		article.Title = e.DOM.Find("div > h3").Text()
+		article.Date = strings.Replace(strings.TrimSpace(d), ".", "/", -1)
+		article.Title = strings.TrimSpace(e.DOM.Find("div > h3").Text())
 		l, _ := e.DOM.Find("a").Attr("href")
 		article.URL = CLASSMETHOD_ENDPOINT + l
 		article.Company = campany
@@ -70,7 +70,7 @@ func writeToRedis(articles []articleInfo) {
 	defer conn.Close()
 
 	for _, article := range articles {
-		key := article.Company + ":" + article.URL
+		key := article.Company + ";" + article.URL
 		_, err := conn.Do("HSET", key, "title", article.Title)
 		_, err = conn.Do("HSET", key, "url", article.URL)
 		_, err = conn.Do("HSET", key, "date", article.Date)
@@ -98,5 +98,5 @@ func Expire(key string, ttl int, c redis.Conn) {
 
 func main() {
 	scrapeMercari("Mercari")
-	scrapeMercari("Classmethod")
+	scrapeClassmethod("Classmethod")
 }
