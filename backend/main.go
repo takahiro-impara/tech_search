@@ -36,6 +36,9 @@ const SEARCH_ENDPOINT_V1 = "/techsearch/v1/blogs"
 const REDIS_ENDPOINT = "localhost:6379"
 
 func getblogs(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	blogs := getBlogsFromRedis()
 	fmt.Fprintf(w, blogs)
 }

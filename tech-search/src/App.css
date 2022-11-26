@@ -1,0 +1,85 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: rgb(22, 21, 21);
+}
+
+ul {
+  list-style-type: none;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+}
+
+.contents {
+  width:80%;
+  background-color: rgba(238, 238, 238, 0.857);
+}
+.blog-container {
+  padding:  10px;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap:40px 30px;
+  align-items: stretch;
+}
+
+.card-item {
+  background-color: rgb(238, 238, 238);
+  border-radius: 5px;
+  width: 300px;
+  box-sizing:border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-img img {
+  width: 100%;
+}
+
+.card-title {
+  margin-top: auto;
+  margin: 5px;
+  font-size: 15px;
+}
+
+.card-subInfo {
+  font-size: 20px;
+  margin-top: auto;
+  display: flex;
+}
+
+.card-subInfo>div:last-of-type{
+  margin-left: auto;
+}
+
+.company {
+  margin-left: 5px;
+  margin-bottom: 5px;
+  font-size: 15px;
+}
+
+.date {
+  margin-right: 5px;
+  margin-bottom: 5px;
+  font-size: 15px;
+}
+
+a {
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
