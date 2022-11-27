@@ -9,7 +9,7 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: {{ .Values.dns.backend }}
 spec:
   ports:
-  - name: {{ .Values.backend.port }}
+  - name: tech-search-backend-port
     port: {{ .Values.backend.port }}
     targetPort: {{ .Values.backend.port }}
     nodePort: {{ .Values.nodePort.backend }}
