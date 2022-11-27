@@ -1,2 +1,5 @@
 namespace:
   name: tech-search-prod
+
+service:
+  name: tech-search
