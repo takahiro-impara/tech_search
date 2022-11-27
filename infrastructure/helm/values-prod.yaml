@@ -3,3 +3,9 @@ namespace:
 
 service:
   name: tech-search
+
+dns:
+  backend: teck-search-backend.staging.udacity.impara8.com
+
+backend:
+  port: "8080"

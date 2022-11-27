@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: {{ .Values.service.name }}
+  name: tech-search-backend
+  nammespace: {{ .Values.namespace.name }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.dns.backend }}
+spec:
+  ports:
+  - name: {{ .Values.backend.port }}
+    port: {{ .Values.backend.port }}
+    targetPort: {{ .Values.backend.port }}
+    nodePort: {{ .Values.nodePort.connection }}
+  selector:
+    service: {{ .Values.service.name }}
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: {{ .Values.service.name }}
+  name: tech-search-backend
+  namespace: {{ .Values.namespace.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: {{ .Values.service.name }}
+  template:
+    metadata:
+      labels:
+        service: {{ .Values.service.name }}
+    spec:
+      containers:
+      - image: frkoichi/tech-search-backend:latest
+        name: tech-search-backend
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: tech-search-config
+      restartPolicy: Always
