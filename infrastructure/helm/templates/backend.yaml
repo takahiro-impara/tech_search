@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    service: {{ .Values.service.name }}
+    service: tech-search-backend
   name: tech-search-backend
   namespace: {{ .Values.namespace.name }}
   annotations:
@@ -14,25 +14,25 @@ spec:
     targetPort: {{ .Values.port.backend }}
     nodePort: {{ .Values.nodePort.backend }}
   selector:
-    service: {{ .Values.service.name }}
+    service: tech-search-backend
   type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    service: {{ .Values.service.name }}
+    service: tech-search-backend
   name: tech-search-backend
   namespace: {{ .Values.namespace.name }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: {{ .Values.service.name }}
+      service: tech-search-backend
   template:
     metadata:
       labels:
-        service: {{ .Values.service.name }}
+        service: tech-search-backend
     spec:
       containers:
       - image: frkoichi/tech-search-backend:latest
