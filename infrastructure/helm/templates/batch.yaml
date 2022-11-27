@@ -4,7 +4,7 @@ metadata:
   name: tech-search-batch
   namespace: {{ .Values.namespace.name }}
   labels:
-    app: {{ .Value.service.name }}
+    app: {{ .Values.service.name }}
 spec:
   schedule: "*/1 * * * *"
   failedJobsHistoryLimit: 3
@@ -14,7 +14,7 @@ spec:
   jobTemplate:
     metadata:
       labels:
-        app: {{ .Value.service.name }}
+        app: {{ .Values.service.name }}
     spec:
       completions: 1
       parallelism: 1
@@ -23,7 +23,7 @@ spec:
       template:
         metadata:
           labels:
-            app: {{ .Value.service.name }}
+            app: {{ .Values.service.name }}
         spec:
           restartPolicy: Never
           containers:
