@@ -1,2 +1,5 @@
 namespace:
   name: default
+
+service:
+  name: tech-search
