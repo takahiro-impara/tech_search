@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: tech-search-config
+  namespace: {{ .Values.namespace.name }}
 data:
   MERCARI_ENDPOINT: "https://engineering.mercari.com/blog/"
   MERCARI_BASEURL: "https://engineering.mercari.com"
