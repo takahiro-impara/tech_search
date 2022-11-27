@@ -9,3 +9,6 @@ dns:
 
 backend:
   port: "8080"
+
+nodePort:
+  backend: 30000

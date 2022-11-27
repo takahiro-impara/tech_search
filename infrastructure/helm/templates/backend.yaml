@@ -12,7 +12,7 @@ spec:
   - name: {{ .Values.backend.port }}
     port: {{ .Values.backend.port }}
     targetPort: {{ .Values.backend.port }}
-    nodePort: {{ .Values.nodePort.connection }}
+    nodePort: {{ .Values.nodePort.backend }}
   selector:
     service: {{ .Values.service.name }}
   type: LoadBalancer
