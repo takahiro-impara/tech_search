@@ -3,7 +3,7 @@ import Card from './components/Card';
 
 import { useState, useEffect } from 'react';
 
-const endpoint = "http://backend.sandbox.us-east-2.tech-search:8080/techsearch/v1/blogs"
+const endpoint = "http://teck-search-backend.staging.udacity.impara8.com:8080/techsearch/v1/blogs"
 
 function App() {
   const [posts, setPosts] = useState([]);

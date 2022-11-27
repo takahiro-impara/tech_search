@@ -3,16 +3,16 @@ kind: Service
 metadata:
   labels:
     service: {{ .Values.service.name }}
-  name: tech-search-backend
+  name: tech-search-frontend
   namespace: {{ .Values.namespace.name }}
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: {{ .Values.dns.backend }}
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.dns.frontend }}
 spec:
   ports:
-  - name: tech-search-backend-port
+  - name: tech-search-frontend-port
     port: 80
-    targetPort: {{ .Values.port.backend }}
-    nodePort: {{ .Values.nodePort.backend }}
+    targetPort: {{ .Values.port.frontend }}
+    nodePort: {{ .Values.nodePort.frontend }}
   selector:
     service: {{ .Values.service.name }}
   type: LoadBalancer
@@ -22,7 +22,7 @@ kind: Deployment
 metadata:
   labels:
     service: {{ .Values.service.name }}
-  name: tech-search-backend
+  name: tech-search-frontend
   namespace: {{ .Values.namespace.name }}
 spec:
   replicas: 1
@@ -35,8 +35,8 @@ spec:
         service: {{ .Values.service.name }}
     spec:
       containers:
-      - image: frkoichi/tech-search-backend:latest
-        name: tech-search-backend
+      - image: frkoichi/tech-search-frontend:latest
+        name: tech-search-frontend
         imagePullPolicy: Always
         envFrom:
         - configMapRef:

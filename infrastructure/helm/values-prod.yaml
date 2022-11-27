@@ -6,9 +6,12 @@ service:
 
 dns:
   backend: teck-search-backend.staging.udacity.impara8.com
+  frontend: teck-search-frontend.staging.udacity.impara8.com
 
-backend:
-  port: "8080"
+port:
+  backend: "8080"
+  frontend: "3000"
 
 nodePort:
   backend: 30000
+  frontend: 30001
