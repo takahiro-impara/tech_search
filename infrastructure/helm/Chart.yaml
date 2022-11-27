@@ -1,0 +1,7 @@
+apiVersion: v1
+name: tech-search
+keywords:
+  - tech-search
+version: 1.0.0
+maintainers:
+- name: impara8
