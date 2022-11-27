@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: tech-search-batch
+  namespace: {{ .Values.namespace.name }}
   labels:
     app: {{ .Value.service.name }}
 spec:
