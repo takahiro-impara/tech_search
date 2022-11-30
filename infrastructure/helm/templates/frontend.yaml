@@ -10,7 +10,7 @@ metadata:
 spec:
   ports:
   - name: tech-search-frontend-port
-    port: 80
+    port: {{ .Values.port.frontend }}
     targetPort: {{ .Values.port.frontend }}
     nodePort: {{ .Values.nodePort.frontend }}
   selector:
