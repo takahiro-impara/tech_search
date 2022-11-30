@@ -10,7 +10,7 @@ metadata:
 spec:
   ports:
   - name: tech-search-frontend-port
-    port: {{ .Values.port.frontend }}
+    port: 80
     targetPort: {{ .Values.port.frontend }}
     nodePort: {{ .Values.nodePort.frontend }}
   selector:
@@ -39,7 +39,7 @@ spec:
         name: tech-search-frontend
         imagePullPolicy: Always
         ports:
-        - containerPort: 3000
+        - containerPort: {{ .Values.port.frontend }}
         envFrom:
         - configMapRef:
             name: tech-search-config

@@ -38,7 +38,7 @@ spec:
       - image: frkoichi/tech-search-backend:latest
         name: tech-search-backend
         ports:
-        - containerPort: 8080
+        - containerPort: {{ .Values.port.backend }}
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
