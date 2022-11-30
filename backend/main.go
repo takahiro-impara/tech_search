@@ -103,7 +103,7 @@ func newPool(addr string) *redis.Pool {
 }
 
 func main() {
-	PORT := os.Getenv("PORT")
+	PORT := os.Getenv("BACKENDPORT")
 	SEARCH_ENDPOINT_V1 := os.Getenv("SEARCH_ENDPOINT_V1")
 
 	http.HandleFunc(SEARCH_ENDPOINT_V1, getblogs)

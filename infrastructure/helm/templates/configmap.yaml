@@ -10,4 +10,4 @@ data:
   REDIS_TTL: "1209600"
   REDIS_ENDPOINT: "redis.sandbox.us-east-2.tech-search:6379"
   SEARCH_ENDPOINT_V1: "/techsearch/v1/blogs"
-  PORT: "8080"
+  BACKENDPORT: "8080"
