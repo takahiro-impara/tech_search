@@ -14,7 +14,7 @@ spec:
     targetPort: {{ .Values.port.frontend }}
     nodePort: {{ .Values.nodePort.frontend }}
   selector:
-    service: tech-search-frontend
+    service: frontend
   type: LoadBalancer
 ---
 apiVersion: apps/v1
@@ -28,16 +28,18 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      service: tech-search-frontend
+      service: frontend
   template:
     metadata:
       labels:
-        service: tech-search-frontend
+        service: frontend
     spec:
       containers:
       - image: frkoichi/tech-search-frontend:latest
         name: tech-search-frontend
         imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
         envFrom:
         - configMapRef:
             name: tech-search-config
