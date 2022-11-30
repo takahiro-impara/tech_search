@@ -7,12 +7,14 @@ metadata:
   namespace: {{ .Values.namespace.name }}
   annotations:
     external-dns.alpha.kubernetes.io/hostname: {{ .Values.dns.backend }}
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: {{ .Values.acm.arn }}
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
 spec:
   ports:
-  - name: tech-search-backend-port
-    port: {{ .Values.port.backend }}
+  - name: https
+    port: 443
     targetPort: {{ .Values.port.backend }}
-    nodePort: {{ .Values.nodePort.backend }}
   selector:
     service: backend
   type: LoadBalancer
