@@ -15,3 +15,6 @@ port:
 nodePort:
   backend: 30000
   frontend: 30001
+
+acm:
+  arn: arn:aws:acm:us-east-2:882275506731:certificate/3cbd9483-d66f-4e9e-bbd7-83024fd4ed24
