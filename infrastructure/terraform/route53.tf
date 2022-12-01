@@ -13,3 +13,16 @@ resource "aws_route53_record" "cache" {
   records = [aws_elasticache_cluster.cache.cache_nodes.0.address]
   ttl     = 60
 }
+
+data "aws_route53_zone" "public" {
+  name = "staging.udacity.impara8.com"
+}
+
+resource "aws_route53_record" "cloudfront" {
+  count   = 1
+  zone_id = data.aws_route53_zone.public.zone_id
+  name    = "tech-search-dist"
+  type    = "CNAME"
+  records = [data.aws_cloudfront_distribution.frontend.domain_name]
+  ttl     = 3600
+}

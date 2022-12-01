@@ -2,6 +2,8 @@ version: '3'
 
 services:
   batch:
+    depends_on: 
+      - redis
     container_name: tech-search-batch
     build:
       context: ./batch
@@ -33,3 +35,11 @@ services:
     tty: true
     ports:
       - "80:3000"
+  redis:
+    container_name: tech-search-redis
+    build:
+      context: ./infrastructure/redis_test
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - "6379:6379"

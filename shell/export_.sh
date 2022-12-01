@@ -1,0 +1,1 @@
+export $(cat $1 | grep -v ^#)

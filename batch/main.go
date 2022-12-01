@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -64,6 +65,51 @@ func scrapeClassmethod(campany string) []articleInfo {
 	return articles
 }
 
+func scrapeZozo(campany string) []articleInfo {
+	ZOZO_ENDPOINT := os.Getenv("ZOZO_ENDPOINT")
+
+	articles := make([]articleInfo, 0)
+	c := colly.NewCollector()
+	c.OnHTML(".archive-entry-header", func(e *colly.HTMLElement) {
+		article := articleInfo{}
+		d, _ := e.DOM.Find("a > time").Attr("datetime")
+		article.Date = strings.Replace(strings.TrimSpace(d), "-", "/", -1)
+		article.Title = strings.TrimSpace(e.DOM.Find("div > h1").Text())
+		article.URL, _ = e.DOM.Find("h1 > a").Attr("href")
+		article.Company = campany
+
+		articles = append(articles, article)
+	})
+
+	c.Visit(ZOZO_ENDPOINT)
+	writeToRedis(articles)
+	return articles
+}
+
+func scrapeDeNA(campany string) []articleInfo {
+	DeNA_ENDPOINT := os.Getenv("DeNA_ENDPOINT")
+	DeNA_BASEURL := os.Getenv("DeNA_BASEURL")
+
+	articles := make([]articleInfo, 0)
+	c := colly.NewCollector()
+	c.OnHTML(".justify-items-start", func(e *colly.HTMLElement) {
+		article := articleInfo{}
+		reg := "\r\n|\n"
+		d := regexp.MustCompile(reg).Split(strings.TrimSpace(e.DOM.Find("p > span").Text()), -1)[0]
+		article.Date = strings.Replace(d, ".", "/", -1)
+		article.Title = strings.TrimSpace(e.DOM.Find("section > a").Text())
+		l, _ := e.DOM.Find("section > a").Attr("href")
+		article.URL = DeNA_BASEURL + l
+		article.Company = campany
+
+		articles = append(articles, article)
+	})
+
+	c.Visit(DeNA_ENDPOINT)
+	writeToRedis(articles)
+	return articles
+}
+
 func writeToRedis(articles []articleInfo) {
 	REDIS_TTL, _ := strconv.Atoi(os.Getenv("REDIS_TTL"))
 	REDIS_ENDPOINT := os.Getenv("REDIS_ENDPOINT")
@@ -102,4 +148,6 @@ func Expire(key string, ttl int, c redis.Conn) {
 func main() {
 	scrapeMercari("Mercari")
 	scrapeClassmethod("Classmethod")
+	scrapeZozo("ZOZO")
+	scrapeDeNA("DeNA")
 }
