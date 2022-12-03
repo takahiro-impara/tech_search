@@ -38,9 +38,9 @@ spec:
     metadata:
       labels:
         service: backend
-        tags.datadoghq.com/env: {{ .Values.env }}
-        tags.datadoghq.com/service: {{ .Values.service.name }}
-        tags.datadoghq.com/version: {{ .Values.service.version }}
+        tags.datadoghq.com/env: "prod"
+        tags.datadoghq.com/service: "tech-search"
+        tags.datadoghq.com/version: "1.0"
     spec:
       containers:
       - image: frkoichi/tech-search-backend:latest
