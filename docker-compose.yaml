@@ -14,7 +14,7 @@ services:
       - "redis.sandbox.us-east-2.tech-search:192.168.11.7"
     tty: true
   backend:
-    container_name: backend.sandbox.us-east-2.tech-search
+    container_name: tech-search-backend
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -36,7 +36,7 @@ services:
       - ./tech-search/os.env
     tty: true
     ports:
-      - "80:3000"
+      - "3000:3000"
   redis:
     container_name: tech-search-redis
     build:

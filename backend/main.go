@@ -68,7 +68,6 @@ func getBlogsFromKeys(keys []string, c redis.Conn) []blog {
 	var fields [4]string = [4]string{"title", "url", "date", "company"}
 	var blogs Blogs = []blog{}
 	for _, key := range keys {
-		//url := strings.Split(key, ";")[1]
 
 		blog := blog{}
 		for _, field := range fields {
