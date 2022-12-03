@@ -111,7 +111,6 @@ func main() {
 			"GET",
 			"OPTIONS",
 		},
-		// 許可したいHTTPリクエストヘッダ
 		AllowHeaders: []string{
 			"Access-Control-Allow-Credentials",
 			"Access-Control-Allow-Headers",

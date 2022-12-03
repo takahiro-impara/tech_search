@@ -66,4 +66,8 @@ spec:
               fieldPath: metadata.labels['tags.datadoghq.com/version']
         - name: DD_LOGS_INJECTION
           value: "true"
+        - name: DD_AGENT_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
       restartPolicy: Always
