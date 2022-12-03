@@ -1,10 +1,3 @@
-data "aws_subnets" "private" {
-  filter {
-    name   = "tag:Name"
-    values = ["education-vpc-private*"] # insert values here
-  }
-}
-
 resource "aws_elasticache_cluster" "cache" {
   cluster_id           = "${var.environment}-${var.service_name}"
   engine               = "redis"
@@ -63,6 +56,18 @@ resource "aws_security_group_rule" "cache-ingress" {
   protocol    = "tcp"
 
   cidr_blocks = ["10.0.0.0/16"]
+
+  security_group_id = aws_security_group.cache.id
+}
+
+resource "aws_security_group_rule" "bastion-ingress" {
+  description = "internal bastion access"
+  type        = "ingress"
+  from_port   = 6379
+  to_port     = 6379
+  protocol    = "tcp"
+
+  source_security_group_id = aws_security_group.bastion.id
 
   security_group_id = aws_security_group.cache.id
 }
