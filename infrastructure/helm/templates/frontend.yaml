@@ -45,5 +45,5 @@ spec:
         - containerPort: {{ .Values.port.frontend }}
         envFrom:
         - configMapRef:
-            name: tech-search-config
+            name: tech-search-config-frontend
       restartPolicy: Always

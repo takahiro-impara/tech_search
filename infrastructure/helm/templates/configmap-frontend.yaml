@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tech-search-config-frontend
+  namespace: {{ .Values.namespace.name }}
+data:
+  REACT_APP_SEARCH_ENDPOINT: "https://teck-search-backend.staging.udacity.impara8.com/techsearch/v1/blogs"
+  REACT_APP_BACKETENDPOINT: "https://tech-search.s3.ap-northeast-1.amazonaws.com/"
+  REACT_APP_IMEXTENSION: ".png"
