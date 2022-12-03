@@ -3,12 +3,12 @@ import Card from './components/Card';
 
 import { useState, useEffect } from 'react';
 
-const endpoint = "https://teck-search-backend.staging.udacity.impara8.com/techsearch/v1/blogs"
-
+const SEARCH_ENDPOINT = process.env.REACT_APP_SEARCH_ENDPOINT
+console.log(process.env)
 function App() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-      fetch(endpoint)
+      fetch(SEARCH_ENDPOINT)
         .then((res) => res.json())
         .then((data) => {
             setPosts(data);

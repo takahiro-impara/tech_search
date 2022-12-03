@@ -32,6 +32,8 @@ services:
     build:
       context: ./tech-search
       dockerfile: Dockerfile
+    env_file:
+      - ./tech-search/os.env
     tty: true
     ports:
       - "80:3000"

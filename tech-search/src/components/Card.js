@@ -1,5 +1,5 @@
 const Card = ({Title, Date, Url, Company}) => {
-  const company_bucket = "https://tech-search.s3.ap-northeast-1.amazonaws.com/" + Company + ".png"
+  const company_bucket = process.env.REACT_APP_BACKETENDPOINT + Company + process.env.REACT_APP_IMEXTENSION
   return (
     <div className="card-item">
       <div className="card-img">
