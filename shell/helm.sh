@@ -1,0 +1,1 @@
+helm upgrade datadog -f infrastructure/datadog/values.yaml datadog/datadog

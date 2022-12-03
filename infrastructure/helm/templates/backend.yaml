@@ -24,6 +24,9 @@ kind: Deployment
 metadata:
   labels:
     service: tech-search-backend
+    tags.datadoghq.com/env: {{ .Values.env }}
+    tags.datadoghq.com/service: {{ .Values.service.name }}
+    tags.datadoghq.com/version: {{ .Values.service.version }}
   name: tech-search-backend
   namespace: {{ .Values.namespace.name }}
 spec:
@@ -35,6 +38,9 @@ spec:
     metadata:
       labels:
         service: backend
+        tags.datadoghq.com/env: {{ .Values.env }}
+        tags.datadoghq.com/service: {{ .Values.service.name }}
+        tags.datadoghq.com/version: {{ .Values.service.version }}
     spec:
       containers:
       - image: frkoichi/tech-search-backend:latest
@@ -45,4 +51,19 @@ spec:
         envFrom:
         - configMapRef:
             name: tech-search-config
+        env:
+        - name: DD_ENV
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/env']
+        - name: DD_SERVICE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/service']
+        - name: DD_VERSION
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['tags.datadoghq.com/version']
+        - name: DD_LOGS_INJECTION
+          value: "true"
       restartPolicy: Always

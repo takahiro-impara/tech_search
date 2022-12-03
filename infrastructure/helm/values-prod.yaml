@@ -1,8 +1,11 @@
 namespace:
   name: tech-search-prod
 
+env: prod
+
 service:
   name: tech-search
+  version: "1.0"
 
 dns:
   backend: teck-search-backend.staging.udacity.impara8.com
