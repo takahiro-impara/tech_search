@@ -3,12 +3,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"os"
 	"sort"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
+	gintrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/gin-gonic/gin"
+	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
+
+	"github.com/gin-gonic/gin"
 )
 
 type blog struct {
@@ -30,14 +33,6 @@ func (b Blogs) Swap(i, j int) {
 
 func (b Blogs) Less(i, j int) bool {
 	return b[i].Date < b[j].Date
-}
-
-func getblogs(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Headers", "*")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
-	blogs := getBlogsFromRedis()
-	fmt.Fprintf(w, blogs)
 }
 
 func getBlogsFromRedis() string {
@@ -102,9 +97,19 @@ func newPool(addr string) *redis.Pool {
 }
 
 func main() {
+	tracer.Start()
+	defer tracer.Stop()
+
+	r := gin.New()
+	SERVICE := os.Getenv("SERVICE")
+	r.Use(gintrace.Middleware(SERVICE))
+
 	PORT := os.Getenv("BACKENDPORT")
 	SEARCH_ENDPOINT_V1 := os.Getenv("SEARCH_ENDPOINT_V1")
 
-	http.HandleFunc(SEARCH_ENDPOINT_V1, getblogs)
-	http.ListenAndServe(":"+PORT, nil)
+	r.GET(SEARCH_ENDPOINT_V1, func(c *gin.Context) {
+		blogs := getBlogsFromRedis()
+		c.String(200, blogs)
+	})
+	r.Run(":" + PORT)
 }

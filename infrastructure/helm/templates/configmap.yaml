@@ -13,6 +13,7 @@ data:
   REDIS_TTL: "3600"
   REDIS_ENDPOINT: "redis.sandbox.us-east-2.tech-search:6379"
   SEARCH_ENDPOINT_V1: "/techsearch/v1/blogs"
+  SERVICE: tech-trend
   BACKENDPORT: "80"
   REACT_APP_SEARCH_ENDPOINT: "https://teck-search-backend.staging.udacity.impara8.com/techsearch/v1/blogs"
   REACT_APP_BACKETENDPOINT: "https://tech-search.s3.ap-northeast-1.amazonaws.com/"
