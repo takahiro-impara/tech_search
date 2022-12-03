@@ -150,8 +150,5 @@ func main() {
 	scrapeClassmethod("Classmethod")
 	scrapeZozo("ZOZO")
 	scrapeDeNA("DeNA")
-	for i := 0; i < 100; i++ {
-		scrapeClassmethod(strconv.Itoa(i))
-	}
 
 }
