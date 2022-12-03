@@ -4,7 +4,6 @@ import Card from './components/Card';
 import { useState, useEffect } from 'react';
 
 const SEARCH_ENDPOINT = process.env.REACT_APP_SEARCH_ENDPOINT
-console.log(process.env)
 function App() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
