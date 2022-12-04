@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"regexp"
 	"strconv"
@@ -20,7 +21,26 @@ type articleInfo struct {
 
 type articles []*articleInfo
 
+func validCheck(a *articleInfo) bool {
+	isValid := true
+	urlFormat := regexp.MustCompile(`https*`)
+	dateFormat := regexp.MustCompile(`^\d{4}\/\d{2}\/\d{2}$`)
+
+	if len(a.Title) == 0 {
+		isValid = false
+		log.Printf("[WARNING] %s's Title is not valid: %s", a.Company, a.Title)
+	} else if urlFormat.MatchString(a.URL) == false {
+		isValid = false
+		log.Printf("[WARNING] %s's URL is not valid: %s", a.Company, a.URL)
+	} else if dateFormat.MatchString(a.Date) == false {
+		isValid = false
+		log.Printf("[WARNING] %s's Date is not valid: %s", a.Company, a.Date)
+	}
+	return isValid
+}
+
 func scrapeMercari(campany string) []articleInfo {
+	log.Printf("start to scrape %s", campany)
 	MERCARI_ENDPOINT := os.Getenv("MERCARI_ENDPOINT")
 	MERCARI_BASEURL := os.Getenv("MERCARI_BASEURL")
 
@@ -40,10 +60,12 @@ func scrapeMercari(campany string) []articleInfo {
 
 	c.Visit(MERCARI_ENDPOINT)
 	writeToRedis(articles)
+	log.Printf("complete %s process", campany)
 	return articles
 }
 
 func scrapeClassmethod(campany string) []articleInfo {
+	log.Printf("start to scrape %s", campany)
 	CLASSMETHOD_ENDPOINT := os.Getenv("CLASSMETHOD_ENDPOINT")
 
 	articles := make([]articleInfo, 0)
@@ -62,10 +84,12 @@ func scrapeClassmethod(campany string) []articleInfo {
 
 	c.Visit(CLASSMETHOD_ENDPOINT)
 	writeToRedis(articles)
+	log.Printf("complete %s process", campany)
 	return articles
 }
 
 func scrapeZozo(campany string) []articleInfo {
+	log.Printf("start to scrape %s", campany)
 	ZOZO_ENDPOINT := os.Getenv("ZOZO_ENDPOINT")
 
 	articles := make([]articleInfo, 0)
@@ -83,10 +107,12 @@ func scrapeZozo(campany string) []articleInfo {
 
 	c.Visit(ZOZO_ENDPOINT)
 	writeToRedis(articles)
+	log.Printf("complete %s process", campany)
 	return articles
 }
 
 func scrapeDeNA(campany string) []articleInfo {
+	log.Printf("start to scrape %s", campany)
 	DeNA_ENDPOINT := os.Getenv("DeNA_ENDPOINT")
 	DeNA_BASEURL := os.Getenv("DeNA_BASEURL")
 
@@ -107,6 +133,7 @@ func scrapeDeNA(campany string) []articleInfo {
 
 	c.Visit(DeNA_ENDPOINT)
 	writeToRedis(articles)
+	log.Printf("complete %s process", campany)
 	return articles
 }
 
@@ -116,16 +143,21 @@ func writeToRedis(articles []articleInfo) {
 
 	pool := newPool(REDIS_ENDPOINT)
 	conn := pool.Get()
+	log.Printf("connect to redis: endpoint: %s", REDIS_ENDPOINT)
+
 	defer conn.Close()
 
 	for _, article := range articles {
+		if validCheck(&article) == false {
+			continue
+		}
 		key := article.Company + ";" + article.URL
 		_, err := conn.Do("HSET", key, "title", article.Title)
 		_, err = conn.Do("HSET", key, "url", article.URL)
 		_, err = conn.Do("HSET", key, "date", article.Date)
 		_, err = conn.Do("HSET", key, "company", article.Company)
 		if err != nil {
-			panic(err)
+			log.Panic(err)
 		}
 		Expire(key, REDIS_TTL, conn)
 	}
@@ -142,13 +174,20 @@ func newPool(addr string) *redis.Pool {
 }
 
 func Expire(key string, ttl int, c redis.Conn) {
-	c.Do("EXPIRE", key, ttl)
+	_, err := c.Do("EXPIRE", key, ttl)
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
 func main() {
+	SERVICE := os.Getenv("SERVICE")
+	log.SetPrefix(SERVICE + ": ")
+
+	log.Println("start batch process")
 	scrapeMercari("Mercari")
 	scrapeClassmethod("Classmethod")
 	scrapeZozo("ZOZO")
 	scrapeDeNA("DeNA")
-
+	log.Println("[OK] completed batch process")
 }

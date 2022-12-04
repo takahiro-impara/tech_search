@@ -5,6 +5,9 @@ metadata:
   namespace: {{ .Values.namespace.name }}
   labels:
     app: {{ .Values.service.name }}
+    tags.datadoghq.com/env: {{ .Values.env }}
+    tags.datadoghq.com/service: {{ .Values.service.name }}
+    tags.datadoghq.com/version: {{ .Values.service.version }}
 spec:
   schedule: "@hourly"
   failedJobsHistoryLimit: 3
@@ -24,6 +27,9 @@ spec:
         metadata:
           labels:
             app: {{ .Values.service.name }}
+            tags.datadoghq.com/env: {{ .Values.env }}
+            tags.datadoghq.com/service: "tech-search"
+            tags.datadoghq.com/version: "1.0"
         spec:
           restartPolicy: Never
           containers:
@@ -32,4 +38,23 @@ spec:
               imagePullPolicy: Always
               envFrom:
                 - configMapRef:
-                    name: tech-search-config
+                    name: tech-search-config-batch
+              env:
+              - name: DD_ENV
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.labels['tags.datadoghq.com/env']
+              - name: DD_SERVICE
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.labels['tags.datadoghq.com/service']
+              - name: DD_VERSION
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.labels['tags.datadoghq.com/version']
+              - name: DD_LOGS_INJECTION
+                value: "true"
+              - name: DD_AGENT_HOST
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.hostIP

@@ -1,29 +1,26 @@
+body{
+  margin: 0;
+  padding: 0;
+}
+
 .App {
   text-align: center;
 }
 
 .App-header {
   background-color: rgb(238, 238, 238);
-  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-}
-
-body{
-  margin: 0;
-  padding: 0;
 }
 
 .contents {
   width:80%;
 }
+
 .blog-container {
-  padding:  10px;
-  display:flex;
+  padding:  20px;
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap:40px 30px;
-  align-items: stretch;
 }

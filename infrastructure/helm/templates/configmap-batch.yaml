@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tech-search-config-batch
+  namespace: {{ .Values.namespace.name }}
+data:
+  MERCARI_ENDPOINT: "https://engineering.mercari.com/blog/"
+  MERCARI_BASEURL: "https://engineering.mercari.com"
+  ZOZO_ENDPOINT: "https://techblog.zozo.com"
+  DeNA_ENDPOINT: "https://engineering.dena.com/blog/"
+  DeNA_BASEURL: "https://engineering.dena.com"
+  CLASSMETHOD_ENDPOINT: "https://dev.classmethod.jp"
+  REDIS_TTL: "3600"
+  REDIS_ENDPOINT: "redis.sandbox.us-east-2.tech-search:6379"
+  SERVICE: tech-serach-batch
