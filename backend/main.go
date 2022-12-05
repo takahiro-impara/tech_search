@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gomodule/redigo/redis"
+	redigotrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/garyburd/redigo"
 	gintrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/gin-gonic/gin"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 
@@ -89,11 +90,16 @@ func getBlogsFromKeys(keys []string, c redis.Conn) []blog {
 }
 
 func newPool(addr string) *redis.Pool {
+	SERVICE := os.Getenv("SERVICE")
 	return &redis.Pool{
 		MaxIdle:     3,
 		MaxActive:   0,
 		IdleTimeout: 240 * time.Second,
-		Dial:        func() (redis.Conn, error) { return redis.Dial("tcp", addr) },
+		Dial: func() (redis.Conn, error) {
+			return redigotrace.Dial("tcp", addr,
+				redigotrace.WithServiceName(SERVICE),
+			)
+		},
 	}
 }
 

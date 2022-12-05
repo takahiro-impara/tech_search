@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tech-search-config-backend
+  namespace: {{ .Values.namespace.name }}
+data:
+  REDIS_ENDPOINT: "redis.sandbox.us-east-2.tech-search:6379"
+  SEARCH_ENDPOINT_V1: "/techsearch/v1/blogs"
+  SERVICE: tech-trend-backend
+  BACKENDPORT: "80"
