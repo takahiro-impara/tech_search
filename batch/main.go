@@ -24,7 +24,7 @@ type articles []*articleInfo
 func validCheck(a *articleInfo) bool {
 	isValid := true
 	urlFormat := regexp.MustCompile(`https*`)
-	dateFormat := regexp.MustCompile(`^\d{4}\/\d{2}\/\d{2}$`)/
+	dateFormat := regexp.MustCompile(`^\d{4}\/\d{2}\/\d{2}$`)
 
 	if len(a.Title) == 0 {
 		isValid = false
