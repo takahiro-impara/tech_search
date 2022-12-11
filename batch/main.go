@@ -189,5 +189,5 @@ func main() {
 	scrapeClassmethod("Classmethod")
 	scrapeZozo("ZOZO")
 	scrapeDeNA("DeNA")
-	log.Println("[OK] completed batch process")
+	log.Println("[OK] completed batch process ")
 }
