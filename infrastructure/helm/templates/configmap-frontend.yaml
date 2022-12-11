@@ -6,4 +6,4 @@ metadata:
 data:
   REACT_APP_SEARCH_ENDPOINT: "https://teck-search-backend.staging.udacity.impara8.com/techsearch/v1/blogs"
   REACT_APP_BACKETENDPOINT: "https://tech-search-dist.staging.udacity.impara8.com/img/"
-  REACT_APP_IMEXTENSION: ".png"
+  REACT_APP_IMEXTENSION: ".webp"
