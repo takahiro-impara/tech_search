@@ -11,7 +11,7 @@ services:
     env_file:
       - ./batch/os.env
     extra_hosts:
-      - "redis.sandbox.us-east-2.tech-search:192.168.11.7"
+      - "redis.sandbox.us-east-2.tech-search:192.168.11.13"
     tty: true
   backend:
     container_name: tech-search-backend
@@ -21,7 +21,7 @@ services:
     env_file:
       - ./backend/os.env
     extra_hosts:
-      - "redis.sandbox.us-east-2.tech-search:192.168.11.7"
+      - "redis.sandbox.us-east-2.tech-search:192.168.11.13"
     tty: true
     ports:
       - "8080:8080"
