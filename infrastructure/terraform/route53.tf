@@ -10,7 +10,7 @@ resource "aws_route53_record" "cache" {
   zone_id = aws_route53_zone.service.zone_id
   name    = "redis"
   type    = "CNAME"
-  records = [aws_elasticache_cluster.cache.cache_nodes.0.address]
+  records = [aws_elasticache_replication_group.cache-cluster.primary_endpoint_address]
   ttl     = 60
 }
 

@@ -1,4 +1,5 @@
 resource "aws_elasticache_cluster" "cache" {
+  count                = 0
   cluster_id           = "${var.environment}-${var.service_name}"
   engine               = "redis"
   engine_version       = var.redis.engine_version

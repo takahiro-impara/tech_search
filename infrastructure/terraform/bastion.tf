@@ -12,7 +12,7 @@ data "template_file" "bastion" {
   template = file("userdata-template/bastion.tpl")
 
   vars = {
-    MAINTENANCE_USER = var.maintenance_user
+    MAINTENANCE_USER = "test"
     INSTANCE_NAME    = "${var.region}-migration-bastion"
   }
 }
