@@ -40,30 +40,30 @@ func (b Blogs) Less(i, j int) bool {
 func getBlogsFromRedis() string {
 	REDIS_ENDPOINT := os.Getenv("REDIS_ENDPOINT")
 
-	span := tracer.StartSpan("getBlogsFromRedis", tracer.ServiceName("backend"))
-	defer span.Finish()
-
-	log.Printf("Start getBlogsFromRedis REDIS_ENDPOINT: %s %v", REDIS_ENDPOINT, span)
+	getBlog_span := tracer.StartSpan("getBlogsFromRedis", tracer.ServiceName("backend"))
+	defer getBlog_span.Finish()
 
 	pool := newPool(REDIS_ENDPOINT)
 	conn := pool.Get()
 	defer conn.Close()
 
-	log.Printf("Start getAllKeys REDIS_ENDPOINT: %s %v", REDIS_ENDPOINT, span)
+	log.Printf("Start getAllKeys REDIS_ENDPOINT: %s %v", REDIS_ENDPOINT, getBlog_span)
 
+	getKey_span := tracer.StartSpan("getAllKeys", tracer.ServiceName("backend"))
+	defer getBlog_span.Finish()
 	keys := getAllKeys(conn)
-	log.Printf("End getAllKeys keys: %s %v", keys, span)
+	log.Printf("End getAllKeys keys: %s %v", keys, getKey_span)
 
-	log.Printf("Start getBlogsFromKeys keys: %s %v", keys, span)
+	log.Printf("Start getBlogsFromKeys keys: %s %v", keys, getKey_span)
 	b := getBlogsFromKeys(keys, conn)
-	log.Printf("End getBlogsFromKeys keys: %s %v", keys, span)
+	log.Printf("End getBlogsFromKeys keys: %s %v", keys, getKey_span)
 
 	blogs, err := json.Marshal(b)
 	if err != nil {
-		log.Printf("[ERROR] %s %v", err, span)
+		log.Printf("[ERROR] %s %v", err, getKey_span)
 	}
 
-	log.Printf("Get all blogs: %s %v", blogs, span)
+	log.Printf("Get all blogs: %s", blogs)
 	return string(blogs)
 }
 
@@ -116,6 +116,7 @@ func main() {
 	tracer.Start(
 		tracer.WithEnv("backend"),
 		tracer.WithEnv(os.Getenv("ENV")),
+		tracer.WithService("backend"),
 	)
 	defer tracer.Stop()
 
