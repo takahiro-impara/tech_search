@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"sort"
 	"time"
@@ -39,23 +40,37 @@ func (b Blogs) Less(i, j int) bool {
 func getBlogsFromRedis() string {
 	REDIS_ENDPOINT := os.Getenv("REDIS_ENDPOINT")
 
+	span := tracer.StartSpan("getBlogsFromRedis", tracer.ServiceName("backend"))
+	defer span.Finish()
+
+	log.Printf("Start getBlogsFromRedis REDIS_ENDPOINT: %s %v", REDIS_ENDPOINT, span)
+
 	pool := newPool(REDIS_ENDPOINT)
 	conn := pool.Get()
 	defer conn.Close()
 
+	log.Printf("Start getAllKeys REDIS_ENDPOINT: %s %v", REDIS_ENDPOINT, span)
+
 	keys := getAllKeys(conn)
+	log.Printf("End getAllKeys keys: %s %v", keys, span)
+
+	log.Printf("Start getBlogsFromKeys keys: %s %v", keys, span)
 	b := getBlogsFromKeys(keys, conn)
+	log.Printf("End getBlogsFromKeys keys: %s %v", keys, span)
+
 	blogs, err := json.Marshal(b)
 	if err != nil {
-		fmt.Println(err)
+		log.Printf("[ERROR] %s %v", err, span)
 	}
+
+	log.Printf("Get all blogs: %s %v", blogs, span)
 	return string(blogs)
 }
 
 func getAllKeys(c redis.Conn) []string {
 	keys, err := redis.Strings(c.Do("KEYS", "*"))
 	if err != nil {
-		fmt.Println(err)
+		log.Printf("[ERROR] %s", err)
 	}
 	return keys
 }
@@ -98,7 +113,10 @@ func newPool(addr string) *redis.Pool {
 }
 
 func main() {
-	tracer.Start()
+	tracer.Start(
+		tracer.WithEnv("backend"),
+		tracer.WithEnv(os.Getenv("ENV")),
+	)
 	defer tracer.Stop()
 
 	r := gin.New()
